@@ -15,7 +15,7 @@ export default function ChatWindow({ conversation }) {
             const res = await axios.get(
                 `/api/conversations/${conversation.id}/messages`
             );
-            setMessages(res.data);
+            setMessages(res.data.data || []);
             scrollToBottom();
         } catch (err) {
             console.error('Error fetching messages', err);
@@ -29,7 +29,7 @@ export default function ChatWindow({ conversation }) {
                 `/api/conversations/${conversation.id}/messages`,
                 { sender: 'user', content: input }
             );
-            setMessages(prev => [...prev, userRes.data]);
+            setMessages(prev => [...prev, userRes.data.data]);
             scrollToBottom();
 
             const botReply = `Echo: ${input}`;
@@ -37,7 +37,7 @@ export default function ChatWindow({ conversation }) {
                 `/api/conversations/${conversation.id}/messages`,
                 { sender: 'bot', content: botReply }
             );
-            setMessages(prev => [...prev, botRes.data]);
+            setMessages(prev => [...prev, botRes.data.data]);
             scrollToBottom();
         } catch (err) {
             console.error('Error sending message', err);
@@ -54,7 +54,7 @@ export default function ChatWindow({ conversation }) {
             );
             setMessages(prev =>
                 prev.map(m =>
-                    m.id === msgId ? { ...m, feedback: res.data.feedback } : m
+                    m.id === msgId ? { ...m, feedback: res.data.data.feedback } : m
                 )
             );
         } catch (err) {
@@ -79,36 +79,36 @@ export default function ChatWindow({ conversation }) {
 
                         {msg.sender === 'bot' && (
                             <span style={{ marginLeft: '1rem' }}>
-                <button
-                    onClick={() => giveFeedback(msg.id, 'like')}
-                    title="Like"
-                    style={{
-                        fontWeight: msg.feedback === 'like' ? 'bold' : 'normal',
-                        backgroundColor: msg.feedback === 'like' ? '#d4edda' : 'transparent',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        padding: '2px 6px',
-                        cursor: 'pointer'
-                    }}
-                >
-                  👍
-                </button>
-                <button
-                    onClick={() => giveFeedback(msg.id, 'dislike')}
-                    title="Dislike"
-                    style={{
-                        fontWeight: msg.feedback === 'dislike' ? 'bold' : 'normal',
-                        backgroundColor: msg.feedback === 'dislike' ? '#f8d7da' : 'transparent',
-                        border: '1px solid #ccc',
-                        borderRadius: '4px',
-                        padding: '2px 6px',
-                        marginLeft: '0.5rem',
-                        cursor: 'pointer'
-                    }}
-                >
-                  👎
-                </button>
-              </span>
+                                <button
+                                    onClick={() => giveFeedback(msg.id, 'like')}
+                                    title="Like"
+                                    style={{
+                                        fontWeight: msg.feedback === 'like' ? 'bold' : 'normal',
+                                        backgroundColor: msg.feedback === 'like' ? '#d4edda' : 'transparent',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '4px',
+                                        padding: '2px 6px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    👍
+                                </button>
+                                <button
+                                    onClick={() => giveFeedback(msg.id, 'dislike')}
+                                    title="Dislike"
+                                    style={{
+                                        fontWeight: msg.feedback === 'dislike' ? 'bold' : 'normal',
+                                        backgroundColor: msg.feedback === 'dislike' ? '#f8d7da' : 'transparent',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '4px',
+                                        padding: '2px 6px',
+                                        marginLeft: '0.5rem',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    👎
+                                </button>
+                            </span>
                         )}
                     </div>
                 ))}

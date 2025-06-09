@@ -14,16 +14,16 @@ function App() {
 
   const fetchConversations = async () => {
     const res = await axios.get('/api/conversations');
-    setConversations(res.data);
-    if (!activeConv && res.data.length) {
-      setActiveConv(res.data[0]);
+    setConversations(res.data.data || []);
+    if (!activeConv && res.data.data?.length) {
+      setActiveConv(res.data.data[0]);
     }
   };
 
   const createConversation = async () => {
     const res = await axios.post('/api/conversations');
-    setConversations([res.data, ...conversations]);
-    setActiveConv(res.data);
+    setConversations([res.data.data, ...conversations]);
+    setActiveConv(res.data.data);
   };
 
   // Rename a conversation
@@ -37,7 +37,7 @@ function App() {
     }
   };
 
-// Delete a conversation
+  // Delete a conversation
   const deleteConversation = async (id) => {
     await axios.delete(`/api/conversations/${id}`);
     setConversations(convos => convos.filter(c => c.id !== id));
