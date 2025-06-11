@@ -5,6 +5,7 @@ class ConversationController {
     async getAllConversations(req, res, next) {
         try {
             const conversations = await conversationService.getAllConversations();
+            console.log(conversations);
             return success(res, conversations);
         } catch (err) {
             next(err);
